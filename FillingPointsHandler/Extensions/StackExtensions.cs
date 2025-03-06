@@ -7,10 +7,10 @@ public static class StackExtensions
     public static List<Gebinde> GetLastUnprocessed(this TimeSeries timeSeries, DateTime date, string crid, uint phaseId)
     {
         var stack = timeSeries.Stack
-            .Where(g => g.Time <= date)
+            .Where(g => g.InsertionTime <= date)
             .Where(g => string.IsNullOrEmpty(g.CRID) || g.CRID == crid)
             .Where(g => g.PhaseId == -1 || g.PhaseId == phaseId)
-            .OrderBy(g => g.Time)
+            .OrderBy(g => g.InsertionTime)
             .ToList();
 
         return stack;
@@ -19,14 +19,11 @@ public static class StackExtensions
     public static Gebinde GetNext(this TimeSeries timeSeries, DateTime date)
     {
         var gebinde = timeSeries.Stack
-            .Where(g => g.Time >= date)
-            .OrderBy(g => g.Time)
+            .Where(g => g.InsertionTime >= date)
+            .OrderBy(g => g.InsertionTime)
             .FirstOrDefault();
 
-        if (gebinde == null)
-        {
-            gebinde = timeSeries.Stack.Last();
-        }
+        gebinde ??= timeSeries.Stack.Last();
 
         if (gebinde == null)
         {
@@ -39,7 +36,7 @@ public static class StackExtensions
     public static TimeSeries GetBetween(this TimeSeries timeSeries, DateTime start, DateTime end)
     {
         var stack = timeSeries.Stack
-            .Where(g => g.Time >= start && g.Time <= end)
+            .Where(g => g.InsertionTime >= start && g.InsertionTime <= end)
             .ToList();
 
         return new TimeSeries()

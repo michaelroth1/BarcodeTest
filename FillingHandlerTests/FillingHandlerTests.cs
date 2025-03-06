@@ -70,5 +70,8 @@ public sealed class FillingHandlerTests
         var result = stacked.Calc(scaleValues);
 
         Assert.AreEqual(3, result.Count);
+        Assert.AreEqual(120d, result[0].UsedAmount);
+        Assert.AreEqual(60d, result[1].UsedAmount);
+        Assert.AreEqual(0d, result[2].UsedAmount);
     }
 }

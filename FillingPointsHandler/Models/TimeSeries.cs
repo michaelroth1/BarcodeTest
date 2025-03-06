@@ -10,7 +10,7 @@ public class TimeSeries
 
     public void InsertOrUpdateGebinde(Gebinde gebinde)
     {
-        var exist = this.Stack.SingleOrDefault(g => g.Time == gebinde.Time);
+        var exist = this.Stack.SingleOrDefault(g => g.InsertionTime == gebinde.InsertionTime);
 
         if (exist == null)
         {
@@ -31,7 +31,7 @@ public class TimeSeries
 
     private void UpdateGebinde(Gebinde gebinde)
     {
-        var exist = this.Stack.Single(g => g.Time == gebinde.Time);
+        var exist = this.Stack.Single(g => g.InsertionTime == gebinde.InsertionTime);
 
         this.Stack.Remove(exist);
 
@@ -43,7 +43,7 @@ public class TimeSeries
     private void Sort()
     {
         this.Stack = this.Stack
-            .OrderBy(g => g.Time)
+            .OrderBy(g => g.InsertionTime)
             .ToList();
     }
 }

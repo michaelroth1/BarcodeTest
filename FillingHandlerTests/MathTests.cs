@@ -8,9 +8,9 @@ public sealed class MathTests
     [TestMethod]
     public void ScaleHelperTests()
     {
-        DateTime? start;
+        DateTime start;
         double delta;
-        DateTime? end;
+        TimeSpan? end;
         var points = new List<Point>
         {
             new() { Time = DateTime.Parse("2024-03-05T12:00"), Value = 0.0 }, //0kg
@@ -18,23 +18,26 @@ public sealed class MathTests
         };
 
         delta = 50d; // Ziel: 50 kg
+        start = points.First().Time;
 
-        end = CounterHelper.FindEndTime(points, delta);
+        end = points.GetDeltaTime(delta);
 
-        Assert.AreEqual(DateTime.Parse("2024-03-05T12:30"), end);
+        Assert.AreEqual(DateTime.Parse("2024-03-05T12:30"), start + end!.Value);
 
         start = DateTime.Parse("2024-03-05T12:30");
         delta = 50d; // Ziel: 50 kg
 
-        end = CounterHelper.FindEndTime(points, delta, start);
+        end = points.GetDeltaTime(delta, start);
 
-        Assert.AreEqual(DateTime.Parse("2024-03-05T13:00"), end);
+        Assert.AreEqual(DateTime.Parse("2024-03-05T13:00"), start + end!.Value);
 
         start = DateTime.Parse("2024-03-05T12:15:00");
         delta = 50d; // Ziel: 50 kg
 
-        end = CounterHelper.FindEndTime(points, delta, start);
+        end = points.GetDeltaTime(delta, start);
 
-        Assert.AreEqual(DateTime.Parse("2024-03-05T12:45"), end);
+        Assert.AreEqual(DateTime.Parse("2024-03-05T12:45"), start + end!.Value);
+
+        //TODO Rücksetzer testen
     }
 }

@@ -15,46 +15,46 @@ public sealed class BarcodingTests
 
         supermarket.RequestScan(new Gebinde()
         {
-            Materaial = "00001",
+            Material = "00001",
             CRID = "4711",
             PhaseId = 2,
             FillingPointId = 1,
-            Amount = 120,
+            TotalAmount = 120,
             Batch = "4711",
-            Time = new DateTime(2025, 1, 1, 11, 00, 00),
+            InsertionTime = new DateTime(2025, 1, 1, 11, 00, 00),
         });
 
         supermarket.RequestScan(new Gebinde()
         {
-            Materaial = "00001",
+            Material = "00001",
             CRID = "4711",
             PhaseId = 2,
             FillingPointId = 1,
-            Amount = 120,
+            TotalAmount = 120,
             Batch = "4711",
-            Time = new DateTime(2025, 1, 1, 12, 00, 00),
+            InsertionTime = new DateTime(2025, 1, 1, 12, 00, 00),
         });
 
         supermarket.RequestScan(new Gebinde()
         {
-            Materaial = "00001",
+            Material = "00001",
             CRID = "4711",
             PhaseId = 2,
             FillingPointId = 1,
-            Amount = 120,
+            TotalAmount = 120,
             Batch = "0815",
-            Time = new DateTime(2025, 1, 1, 14, 00, 00),
+            InsertionTime = new DateTime(2025, 1, 1, 14, 00, 00),
         });
 
         supermarket.RequestScan(new Gebinde()
         {
-            Materaial = "00001",
+            Material = "00001",
             CRID = "4711",
             PhaseId = 2,
             FillingPointId = 1,
-            Amount = 120,
+            TotalAmount = 120,
             Batch = "0817",
-            Time = new DateTime(2025, 1, 1, 16, 00, 00),
+            InsertionTime = new DateTime(2025, 1, 1, 16, 00, 00),
         });
 
         supermarket.Close();

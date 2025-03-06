@@ -14,26 +14,26 @@ if (mode == "scan")
 
     supermarket.RequestScan(new Gebinde()
     {
-        Materaial = "00001",
-        Amount = 120,
+        Material = "00001",
+        TotalAmount = 120,
         Batch = "4711",
-        Time = new DateTime(2025, 1, 1, 11, 00, 00),
+        InsertionTime = new DateTime(2025, 1, 1, 11, 00, 00),
     });
 
     supermarket.RequestScan(new Gebinde()
     {
-        Materaial = "00001",
-        Amount = 120,
+        Material = "00001",
+        TotalAmount = 120,
         Batch = "0815",
-        Time = new DateTime(2025, 1, 1, 14, 00, 00),
+        InsertionTime = new DateTime(2025, 1, 1, 14, 00, 00),
     });
 
     supermarket.RequestScan(new Gebinde()
     {
-        Materaial = "00001",
-        Amount = 120,
+        Material = "00001",
+        TotalAmount = 120,
         Batch = "0817",
-        Time = new DateTime(2025, 1, 1, 16, 00, 00),
+        InsertionTime = new DateTime(2025, 1, 1, 16, 00, 00),
     });
 
     supermarket.Close();
@@ -44,5 +44,6 @@ else if(mode == "calc")
 
     var start = new DateTime(2025, 1, 1, 13, 00, 00);
     var end = new DateTime(2025, 1, 1, 17, 00, 00);
-    var result = supermarket.Calc(start, end);
+    var _ = supermarket.Calc(start, end);
+
 }
