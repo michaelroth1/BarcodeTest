@@ -22,31 +22,15 @@ public abstract class FillingPoint(string id) : IFillingPoint
     {
         if (AllowScanning)
         {
-            TimeSeries ts = TryGetTimeSeries();
+            TimeSeries ts = StackHelper.TryGet(_id);
 
             ts.InsertOrUpdateGebinde(gebinde);
 
-            TimeSeriesHandler.Update(ts);
+            StackHelper.Update(ts);
         }
         else
         {
             throw new Exception("Scanning not allowed");
-        }
-    }
-
-    private TimeSeries TryGetTimeSeries()
-    {
-        try
-        {
-            return TimeSeriesHandler.Get(_id);
-        }
-        catch (Exception)
-        {
-            return new TimeSeries()
-            {
-                Id = _id,
-                Scans = [],
-            };
         }
     }
 }

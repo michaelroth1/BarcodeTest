@@ -6,11 +6,11 @@ public class TimeSeries
 {
     public string Id { get; set; } = null!;
 
-    public List<Gebinde> Scans { get; set; } = [];
+    public List<Gebinde> Stack { get; set; } = [];
 
     public void InsertOrUpdateGebinde(Gebinde gebinde)
     {
-        var exist = this.Scans.SingleOrDefault(g => g.Time == gebinde.Time);
+        var exist = this.Stack.SingleOrDefault(g => g.Time == gebinde.Time);
 
         if (exist == null)
         {
@@ -24,16 +24,16 @@ public class TimeSeries
 
     private void InsertGebinde(Gebinde gebinde)
     {
-        this.Scans.Add(gebinde);
+        this.Stack.Add(gebinde);
 
         this.Sort();
     }
 
     private void UpdateGebinde(Gebinde gebinde)
     {
-        var exist = this.Scans.Single(g => g.Time == gebinde.Time);
+        var exist = this.Stack.Single(g => g.Time == gebinde.Time);
 
-        this.Scans.Remove(exist);
+        this.Stack.Remove(exist);
 
         InsertGebinde(gebinde);
 
@@ -42,7 +42,7 @@ public class TimeSeries
 
     private void Sort()
     {
-        this.Scans = this.Scans
+        this.Stack = this.Stack
             .OrderBy(g => g.Time)
             .ToList();
     }
