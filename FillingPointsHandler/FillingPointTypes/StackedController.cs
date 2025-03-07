@@ -4,8 +4,7 @@ namespace FillingPointsHandler.FillingPointTypes;
 
 public class StackedController(string id) : FillingPoint(id)
 {
-    private readonly string _id = id;
-
+    
     public override bool AllowScanning => true;
 
     public override void Open()
