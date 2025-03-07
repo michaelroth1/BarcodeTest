@@ -34,6 +34,6 @@ public class SupermarketHandler(string _id) : IFillingPointHandler
         //FIFO
         return StackHelper
             .TryGetByTimeSpan(_id, start, end)
-            .Stack;
+            .GebindeStack;
     }
 }

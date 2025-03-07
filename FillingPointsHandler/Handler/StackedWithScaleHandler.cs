@@ -1,24 +1,34 @@
 ﻿using FillingPointsHandler.Models;
 using Math;
+using PimsMock;
+using PimsMock.Models;
 
 namespace FillingPointsHandler.Handler;
 
 public class StackedWithScaleHandler(string _id, string _crid, uint _phaseId) : IScaleHandler
 {
-    public List<Gebinde> Calc(List<TimeSeriesPoint> scaleValues)
+    public List<Gebinde> Calc(DateTime start, DateTime end)
     {
-        var start = scaleValues.First().Time;
-        var end = scaleValues.Last().Time;
-
         var stack = StackHelper
             .TryGetByTimeSpan(_id, start, end)
-            .Stack;
+            .GebindeStack;
 
         var unprocessed = StackHelper.TryGetLastUnprocessed(_id, start, _crid, _phaseId);
         stack.InsertRange(0, unprocessed); //Letzte nicht verarbeitete Gebinde VOR Start hinzufügen        
-        //stack.Add(StackHelper.TryGetNext(_id, end)); //Nächstes Gebinde NACH Ende hinzufügen
+                                           //stack.Add(StackHelper.TryGetNext(_id, end)); //Nächstes Gebinde NACH Ende hinzufügen
 
+        var scaleValues = ScaleMock.ScaleValues; 
         var points = scaleValues.Select(tsp => new Point() { Time = tsp.Time, Value = tsp.Value }).ToList();
+        //Preparing
+        points.InsertPointByDateTime(start);
+        points.InsertPointByDateTime(end);
+
+        return Calc(stack, points);
+    }
+
+    public List<Gebinde> Calc(List<Gebinde> stack, List<Point> scaleValues)
+    {
+        var start = scaleValues.First().Time;
 
         var result = new List<Gebinde>();
 
@@ -26,9 +36,9 @@ public class StackedWithScaleHandler(string _id, string _crid, uint _phaseId) : 
         {
             var totalAmount = stack[i].TotalAmount;
 
-            var deltaTime = points.GetDeltaTime(totalAmount, start);
+            var deltaTime = scaleValues.GetDeltaTime(totalAmount, start);
 
-            var deltaAmount = points.GetDeltaAmount(start, start + deltaTime);
+            var deltaAmount = scaleValues.GetDeltaAmount(start, start + deltaTime);
 
             //zuerst schrittweise integrieren bis zur Schranke T1 -> somit weiß ich wann der Sack leer ist
             result.Add(new Gebinde()

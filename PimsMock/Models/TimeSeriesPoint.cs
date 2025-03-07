@@ -1,4 +1,4 @@
-﻿namespace FillingPointsHandler.Models;
+﻿namespace PimsMock.Models;
 
 public class TimeSeriesPoint
 {

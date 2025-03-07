@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\PimsMock\PimsMock.csproj" />
   </ItemGroup>
 
   <ItemGroup>

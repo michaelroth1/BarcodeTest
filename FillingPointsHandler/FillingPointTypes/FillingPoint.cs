@@ -22,7 +22,7 @@ public abstract class FillingPoint(string id) : IFillingPoint
     {
         if (AllowScanning)
         {
-            TimeSeries ts = StackHelper.TryGet(_id);
+            Stack ts = StackHelper.TryGet(_id);
 
             ts.InsertOrUpdateGebinde(gebinde);
 
