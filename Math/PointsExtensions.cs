@@ -41,13 +41,9 @@ public static class PointsExtensions
 
         List<Point> clone = [.. points];
 
-        //Startpunkt setzen
-        clone = clone.InsertPointByDateTime(startTime);
+        clone = PrepareStart(clone, startTime);
 
-        //Alles vor dem Startpunkt entfernen
-        clone = clone.TrimStart(startTime);
-
-        //eine streng Monoton steigende Kurve daraus machen
+        //eine streng monoton steigende Kurve daraus machen
         clone = clone.TransformToMonotonicIncreasing();
 
         //Ab hier habe ich eine Liste in der Hand die von Punkt eins an durchsucht werden kann
@@ -62,6 +58,19 @@ public static class PointsExtensions
         return date == null
             ? points.Last().Time - startTime.Value //Gebinde wurde nicht vollständig in Zeitreihe aufgegeben
             : date.Value - startTime.Value;
+    }
+
+    /// <summary>
+    /// Startpunkt setzen
+    /// Alles vor dem Startpunkt entfernen
+    /// </summary>
+    private static List<Point> PrepareStart(this List<Point> clone, DateTime? startTime)
+    {        
+        clone = clone.InsertPointByDateTime(startTime);
+        
+        clone = clone.TrimStart(startTime);
+
+        return clone;
     }
 
     public static List<Point> InsertPointByDateTime(this List<Point> points, DateTime? startTime)
