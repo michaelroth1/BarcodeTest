@@ -1,56 +1,53 @@
-﻿using FillingPointsHandler.Models;
+﻿using FillingPointsHandler.Helpers;
+using FillingPointsHandler.Models;
 using Math;
-using PimsMock;
 using PimsMock.Models;
 
 namespace FillingPointsHandler.Handler;
 
-public class StackedWithScaleHandler(string _id, string _crid, uint _phaseId) : IScaleHandler
+public class StackedWithScaleHandler() : IFillingPointHandler, IScaleHandler
 {
+    public IPimsGetter ScaleValueGetter { get; set; } = null!;
+
+    public IStackGetter StackGetter { get; set; } = null!;
+       
     public List<Gebinde> Calc(DateTime start, DateTime end)
     {
-        var stack = StackHelper
-            .TryGetByTimeSpan(_id, start, end)
-            .GebindeStack;
+        var scaleValues = ScaleValueGetter.GetScaleValues();
+        
+        var stack = StackGetter.GetStack();
 
-        var unprocessed = StackHelper.TryGetLastUnprocessed(_id, start, _crid, _phaseId);
-        stack.InsertRange(0, unprocessed); //Letzte nicht verarbeitete Gebinde VOR Start hinzufügen        
-                                           //stack.Add(StackHelper.TryGetNext(_id, end)); //Nächstes Gebinde NACH Ende hinzufügen
-
-        var scaleValues = ScaleMock.ScaleValues; 
-        var points = scaleValues.Select(tsp => new Point() { Time = tsp.Time, Value = tsp.Value }).ToList();
-        //Preparing
-        points.InsertPointByDateTime(start);
-        points.InsertPointByDateTime(end);
-
-        return Calc(stack, points);
+        return Calc(start, stack, scaleValues);
     }
 
-    public List<Gebinde> Calc(List<Gebinde> stack, List<Point> scaleValues)
+    private static List<Gebinde> Calc(DateTime start, Stack stack, List<TimeSeriesPoint> scaleValues)
     {
-        var start = scaleValues.First().Time;
+        var points = scaleValues
+            .Select(tsp => new Point() { Time = tsp.Time, Value = tsp.Value })
+            .ToList()
+            .InsertPointByDateTime(start); //Preparing
 
         var result = new List<Gebinde>();
 
-        for (int i = 0; i < stack.Count; i++)
+        for (int i = 0; i < stack.GebindeStack.Count; i++)
         {
-            var totalAmount = stack[i].TotalAmount;
+            var totalAmount = stack.GebindeStack[i].TotalAmount;
 
-            var deltaTime = scaleValues.GetDeltaTime(totalAmount, start);
+            var deltaTime = points.GetDeltaTime(totalAmount, start);
 
-            var deltaAmount = scaleValues.GetDeltaAmount(start, start + deltaTime);
+            var deltaAmount = points.GetDeltaAmount(start, start + deltaTime);
 
             //zuerst schrittweise integrieren bis zur Schranke T1 -> somit weiß ich wann der Sack leer ist
             result.Add(new Gebinde()
             {
                 TotalAmount = totalAmount,
-                Batch = stack[i].Batch,
+                Batch = stack.GebindeStack[i].Batch,
                 InsertionTime = start,
                 EndTime = start + deltaTime,
-                FillingPointId = stack[i].FillingPointId,
-                Material = stack[i].Material,
-                CRID = stack[i].CRID,
-                PhaseId = stack[i].PhaseId,
+                FillingPointId = stack.GebindeStack[i].FillingPointId,
+                Material = stack.GebindeStack[i].Material,
+                CRID = stack.GebindeStack[i].CRID,
+                PhaseId = stack.GebindeStack[i].PhaseId,
                 UsedAmount = deltaAmount,
             });
 

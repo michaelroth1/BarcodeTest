@@ -5,7 +5,7 @@ using FillingPointsHandler.Models;
 
 namespace FillingPointsHandler;
 
-class StackHelper //Äquivalent zur PI-SDK
+public class StackHelper //Äquivalent zur PI-SDK
 {
     public static Gebinde TryGetNext(string id, DateTime date)
     {
