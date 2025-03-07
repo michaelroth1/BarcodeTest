@@ -37,8 +37,6 @@ public sealed class MathTests
         end = points.GetDeltaTime(delta, start);
 
         Assert.AreEqual(DateTime.Parse("2024-03-05T12:45"), start + end!.Value);
-
-        
     }
 
     [TestMethod]
